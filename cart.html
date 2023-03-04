@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8">
+  <title>AR+T MASK | CART</title>
+  <meta name="description" content="デザインマスクのAR試着を楽しもう。">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <link rel="icon" href="favicon.ico">
+  <link rel="stylesheet" href="destyle.min.css">
+  <link rel="stylesheet" href="common.css">
+  <link rel="manifest" href="manifest.json">
+  <style>
+    body {
+      max-width: 414px;
+      margin: 0 auto;
+    }
+
+    .container {
+      margin: 25px;
+    }
+
+    /* load-animation */
+    .box {
+      opacity: 0;
+    }
+
+    .smooth {
+      animation-name: smoothAnime;
+      animation-duration: 0.8s;
+      animation-fill-mode: forwards;
+      transform-origin: left;
+      opacity: 0;
+    }
+
+    @keyframes smoothAnime {
+      from {
+        transform: translate3d(0, 100%, 0) skewY(12deg);
+        opacity: 0;
+      }
+
+      to {
+        transform: translate3d(0, 0, 0) skewY(0);
+        opacity: 1;
+      }
+    }
+
+    .fadeIn {
+      animation-name: fadeInAnime;
+      animation-duration: 1s;
+      animation-fill-mode: forwards;
+      opacity: 0;
+      animation-delay: 0s !important;
+    }
+
+    @keyframes fadeInAnime {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* start-modal */
+    .modaal-content-container {
+      padding: 0 !important;
+    }
+
+    /* start-modal__img */
+    .info-img {
+      position: relative;
+      height: 270px;
+
+    }
+    .info-img img{
+      object-fit: cover;
+      height: 100%;
+    }
+    /* start-modal__text*/
+    .info-body {
+      padding-top: 40px;
+      text-align: center;
+    }
+
+    .info-body__title {
+      font-weight: 600;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .info-body__text {
+      font-size: 14px;
+      line-height: 21px;
+    }
+
+    /* header */
+    .header {
+      height: 130px;
+      background-color: #fff;
+      box-shadow: 0px 4px 4px -3px #b8b8b8;
+      max-width: 414px;
+    }
+
+    .header-menu {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      padding: 65px 30px 0 30px;
+    }
+
+    .header-menu p {
+      margin-left: 100px;
+      font-size: 16px;
+    }
+
+    /* main-contents */
+    .main {
+      display: flex;
+      margin-bottom: 25px;
+      transition: 0.1s ease;
+    }
+
+    .shop_a.active {
+      display: none;
+    }
+
+    .shop_b.active {
+      display: none;
+    }
+
+    .item-img {
+      height: 90px;
+      width: 90px;
+    }
+    .item-img img {
+      margin-top: 10px;
+      width: 100%;
+      height: auto;
+    }
+
+    .item_a {
+      background-color: #dcfffa;
+      background-image: radial-gradient(circle at center center, #bbf6f5, #dcfffa), repeating-radial-gradient(circle at center center, #bbf6f5, #bbf6f5, 10px, transparent 20px, transparent 10px);
+      background-blend-mode: multiply;
+    }
+
+    .item_b {
+      background-color: #fffed0;
+      background: linear-gradient(135deg, #f7f69b55 25%, transparent 25%) -10px 0/ 20px 20px, linear-gradient(225deg, #f7f69b 25%, transparent 25%) -10px 0/ 20px 20px, linear-gradient(315deg, #f7f69b55 25%, transparent 25%) 0px 0/ 20px 20px, linear-gradient(45deg, #f7f69b 25%, #fffed0 25%) 0px 0/ 20px 20px;
+    }
+
+    .item {
+      /* margin-top: 10px; */
+      margin-left: 20px;
+    }
+    .item-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .item-detail {
+      display: flex;
+      align-items: flex-end;
+      margin-bottom: 5px;
+    }
+
+    .item-detail h2 {
+      font-weight: 600;
+      font-size: 12px;
+      margin-right: 10px;
+    }
+
+    .item-detail p {
+      font-size: 12px;
+    }
+
+    .item-size {
+      font-size: 10px;
+      margin-bottom: 10px;
+    }
+
+    .item-remove {
+      font-size: 10px;
+      color: red;
+      padding-bottom: 3px;
+      border-bottom: 1px solid red;
+      display: inline-block;
+    }
+
+    .number {
+      margin-left: 32px;
+      border: 1px solid #343434;
+      border-radius: 30px;
+      padding: 13px 10px 10px 10px;
+      width: 35px;
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    /* main-contents__size */
+    .main-contents__btn {
+      position: fixed !important;
+      z-index: 3;
+      bottom: 3%;
+      left: 50%;
+      transform: translate(-50%);
+      width: 350px;
+      background-color: #FBAB34;
+      border-radius: 30px;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .main-contents__btn p {
+      color: #fff;
+      padding: 15px 10px 15px 10px;
+    }
+
+    /* sub-contents */
+    .sub-contents {
+      position: absolute;
+      bottom: 12%;
+      width: 85%;
+      text-align: center;
+      max-width: 414px;
+    }
+
+    .table1 {
+      padding-bottom: 20px;
+      border-bottom: 1px #343434 solid;
+    }
+
+    .table2 {
+      padding-top: 20px;
+    }
+
+    .sub-contents dt {
+      font-size: 16px;
+      font-weight: 400;
+      float: left;
+      margin-bottom: 14px;
+    }
+
+    .sub-contents dd {
+      font-size: 16px;
+      font-weight: 600;
+      margin-left: 1em;
+      text-align: right;
+      margin-bottom: 14px;
+    }
+    .sale {
+      color: red;
+    }
+  </style>
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/earlyaccess/notosansjp.css">
+  <link rel="stylesheet" type="text/css" href="//unpkg.com/swiper/swiper-bundle.min.css">
+  <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/modaal@0.4.4/dist/css/modaal.min.css">
+  <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+</head>
+
+<body>
+
+  <!-- header -->
+  <div class="header">
+    <div class="header-menu">
+      <div class="back-button">
+        <a href="#" onclick="history.back(-1);return false;"><i class="fa-solid fa-angle-left fa-2x"
+            style="color: black"></i></a>
+      </div>
+      <p>Shopping Cart</p>
+    </div>
+  </div>
+  <!-- main-contents -->
+  <div class="container">
+    <div class="main shop_a">
+      <div class="item-img item_a">
+        <img src="thumbs/shop/designer/d5_left.png" alt="">
+      </div>
+      <div class="item smooth">
+        <p class="item-title">BiRiBiRi</p>
+        <div class="item-detail">
+          <h2>¥ 600</h2>
+          <p>Designers Pack No.6</p>
+        </div>
+        <p class="item-size">Size:S</p>
+        <div class="item-remove delete_a">REMOVE</div>
+      </div>
+    </div>
+
+    <div class="main shop_b">
+      <div class="item-img item_b">
+        <img src="thumbs/shop/graphic/g3_left.png" alt="">
+      </div>
+      <div class="item smooth">
+        <p class="item-title">Pastel Flower</p>
+        <div class="item-detail">
+          <h2>¥ 600</h2>
+          <p>esigners Pack No.4</p>
+        </div>
+        <p class="item-size">Size:S</p>
+        <div class="item-remove delete_b">REMOVE</div>
+      </div>
+    </div>
+    <div class="main-contents__btn fadeIn openbtn">
+      <a href="#modal_link" class="modal">
+        <p>決済方法の選択に進む</p>
+      </a>
+    </div>
+  </div>
+
+  <!-- nav -->
+  <div id="modal_link" style="display: none;">
+    <div class="info-img">
+      <img src="thumbs/1-scaled.jpg" alt="">
+    </div>
+    <div class="info-body">
+      <p class="info-body__title">終わり</p>
+      <p class="info-body__text">ここでこのサイトは終わりです。</p>
+    </div>
+  </div>
+
+  <!-- sub-contents -->
+  <div class="sub-contents container">
+    <dl class="table1">
+      <dt>合計金額</dt>
+      <dd>¥1,200</dd>
+      <dt class="sale">クーポン割引</dt>
+      <dd class="sale">−¥200</dd>
+    </dl>
+    <dl class="table2">
+      <dt>最終金額</dt>
+      <dd>¥1,000</dd>
+    </dl>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+  <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/modaal@0.4.4/dist/js/modaal.min.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+  <script type="text/javascript" src="//kit.fontawesome.com/5a4920467e.js" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="lib/js/deepar.js"></script>
+
+  <script type="text/javascript">
+    // load-animation
+    function delayScrollAnime() {
+      var time = 0.05;
+      var value = time;
+      $('.delayScroll').each(function () {
+        var parent = this;					
+        var elemPos = $(this).offset().top;
+        var scroll = $(window).scrollTop();
+        var windowHeight = $(window).height();
+        var childs = $(this).children();	
+
+        if (scroll >= elemPos - windowHeight && !$(parent).hasClass("play")) {
+          $(childs).each(function () {
+
+            if (!$(this).hasClass("smooth")) {
+
+              $(parent).addClass("play");	
+              $(this).css("animation-delay", value + "s");
+              $(this).addClass("smooth");
+              value = value + time;
+
+              
+              var index = $(childs).index(this);
+              if ((childs.length - 1) == index) {
+                $(parent).removeClass("play");
+              }
+            }
+          })
+        } else {
+          $(childs).removeClass("smooth");
+          value = time;
+        }
+      })
+    }
+
+    $(window).on('load', function () {
+      delayScrollAnime();
+    });
+    $(".delete_a").click(function () {
+      $(".shop_a").addClass('active');
+    });
+    $(".delete_b").click(function () {
+      $(".shop_b").addClass('active');
+    });
+
+    $(".modal").modaal({
+      overlay_close: true,
+      hide_close: true,
+      width: 300,
+      height: 400
+    });
+
+  </script>
+</body>
+
+</html>

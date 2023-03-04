@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8">
+  <title>AR+T MASK | SHOP</title>
+  <meta name="description" content="デザインマスクのAR試着を楽しもう。">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <link rel="icon" href="favicon.ico">
+  <link rel="stylesheet" href="destyle.min.css">
+  <link rel="stylesheet" href="common.css">
+  <link rel="manifest" href="manifest.json">
+  <style>
+    body {
+      max-width: 414px;
+      margin: 0 auto;
+    }
+
+    /* load-animation */
+    .box {
+      opacity: 0;
+    }
+
+    .smooth {
+      animation-name: smoothAnime;
+      animation-duration: 0.8s;
+      animation-fill-mode: forwards;
+      transform-origin: left;
+      opacity: 0;
+    }
+
+    @keyframes smoothAnime {
+      from {
+        transform: translate3d(0, 100%, 0) skewY(12deg);
+        opacity: 0;
+      }
+
+      to {
+        transform: translate3d(0, 0, 0) skewY(0);
+        opacity: 1;
+      }
+    }
+
+    /* header */
+    .header {
+      background-color: #FFF;
+      position: relative;
+      height: 80px;
+      max-width: 414px;
+    }
+
+    .header-menu {
+      position: fixed !important;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 15px 20px 15px;
+    }
+
+    .logo {
+      height: 40px;
+    }
+
+    .ar-button {
+      margin-left: 175px;
+      height: 40px;
+    }
+
+    /* tab */
+    .tab-group {
+      position: fixed !important;
+      display: flex;
+      bottom: 5%;
+      left: 0;
+      z-index: 1000;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .tab-group li {
+      margin: 0px 20px;
+    }
+
+    .tab {
+      height: 60px !important;
+      width: 60px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .tab p {
+      padding-top: 5px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .panel {
+      display: none;
+    }
+
+    .tab.is-active {
+      border: 3px solid #F25749;
+      color: #F25749;
+      border-radius: 45% 40% 50% 70%/50% 50% 70% 60%;
+      animation: mask-animation-1 4s linear infinite;
+      transition: 0.1s ease;
+    }
+
+    .panel.is-show {
+      display: block;
+    }
+
+    /* tab-animation */
+    .tab.tab-A img {
+      padding: 5px;
+      border-radius: 45% 40% 50% 70%/50% 50% 70% 60%;
+      animation: mask-animation-1 4.5s linear infinite;
+      filter: drop-shadow(0px 0px 7px #808080);
+    }
+
+    @keyframes mask-animation-1 {
+      25% {
+        border-radius: 79% 75% 65% 75%/97% 67% 92%
+      }
+
+      50% {
+        border-radius: 88% 97% 78% 52%/71% 80% 85%
+      }
+
+      75% {
+        border-radius: 71% 68% 68% 87%/87% 64% 61%
+      }
+    }
+
+    .tab.tab-B img {
+      padding: 5px;
+      border-radius: 45% 40% 50% 70%/50% 50% 70% 60%;
+      animation: mask-animation-2 4s linear infinite;
+      filter: drop-shadow(0px 0px 7px #808080);
+    }
+
+    @keyframes mask-animation-2 {
+      25% {
+        border-radius: 78% 74% 71% 66%/85% 69% 44%
+      }
+
+      50% {
+        border-radius: 86% 61% 81% 74%/97% 75% 35%
+      }
+
+      75% {
+        border-radius: 79% 97% 100% 73%/96% 60% 54%
+      }
+    }
+
+    .tab.tab-C img {
+      padding: 5px;
+      border-radius: 45% 40% 50% 70%/50% 50% 70% 60%;
+      animation: mask-animation-3 5s linear infinite;
+      filter: drop-shadow(0px 0px 7px #808080);
+    }
+
+    @keyframes mask-animation-3 {
+      25% {
+        border-radius: 77% 83% 82% 83%/80% 67% 44%
+      }
+
+      50% {
+        border-radius: 83% 100% 82% 51%/78% 57% 82%
+      }
+
+      75% {
+        border-radius: 84% 64% 80% 64%/100% 85% 78%
+      }
+    }
+
+    /* main-contents */
+    .a-A {
+      background-color: #ffe6f1;
+      opacity: 1;
+      background-image: repeating-radial-gradient(circle at 0 0, transparent 0, #ffe6f1 10px), repeating-linear-gradient(#ffd9ea55, #ffd9ea);
+      box-shadow: 0px 4px 6px -3px #636363;
+    }
+
+    .b-A {
+      /* background-color: rgba(242, 204, 5, 0.6); */
+      box-shadow: 0px 4px 6px -3px #636363;
+      background-color: #ffe3b1;
+      background: linear-gradient(135deg, #F7F0E455 25%, transparent 25%) -10px 0/ 20px 20px, linear-gradient(225deg, #F7F0E4 25%, transparent 25%) -10px 0/ 20px 20px, linear-gradient(315deg, #F7F0E455 25%, transparent 25%) 0px 0/ 20px 20px, linear-gradient(45deg, #F7F0E4 25%, #ffe3b1 25%) 0px 0/ 20px 20px;
+    }
+
+    .c-A {
+      /* background-color: rgba(242, 101, 209, 0.6); */
+      box-shadow: 0px 4px 6px -3px #636363;
+      background-color: #bbb8b8;
+      background-image: linear-gradient(#a6a1a1 1px, transparent 1px), linear-gradient(to right, #a6a1a1 1px, #bbb8b8 1px);
+      background-size: 20px 20px;
+    }
+
+    .d-A {
+      /* background-color: rgba(242, 222, 220, 0.6); */
+      box-shadow: 0px 4px 6px -3px #636363;
+      background-color: #fbedff;
+      opacity: 1;
+      background-image: linear-gradient(0deg, #fbedff 50%, #f8dbff 50%);
+      background-size: 10px 10px;
+    }
+
+    .e-A {
+      /* background-color: rgba(104, 148, 166, 0.6); */
+      box-shadow: 0px 4px 6px -3px #636363;
+      background-color: #d3eceb;
+      background-image: repeating-linear-gradient(45deg, #C3E5E4 25%, transparent 25%, transparent 75%, #C3E5E4 75%, #C3E5E4), repeating-linear-gradient(45deg, #C3E5E4 25%, #d3eceb 25%, #d3eceb 75%, #C3E5E4 75%, #C3E5E4);
+      background-position: 0 0, 10px 10px;
+      background-size: 20px 20px;
+    }
+
+    .a-B {
+      box-shadow: 0px 4px 6px -3px #636363;
+      background-color: #f2ebe2;
+      background-image: radial-gradient(circle at center center, #f5f0e9, #f2ebe2), repeating-radial-gradient(circle at center center, #f5f0e9, #f5f0e9, 10px, transparent 20px, transparent 10px);
+      background-blend-mode: multiply;
+    }
+
+    .b-B {
+      box-shadow: 0px 4px 6px -3px #636363;
+      background-color: #dce5e5;
+      background-image: linear-gradient(135deg, #cedbdb 25%, transparent 25%), linear-gradient(225deg, #cedbdb 25%, transparent 25%), linear-gradient(45deg, #cedbdb 25%, transparent 25%), linear-gradient(315deg, #cedbdb 25%, #dce5e5 25%);
+      background-position: 10px 0, 10px 0, 0 0, 0 0;
+      background-size: 20px 20px;
+      background-repeat: repeat;
+    }
+
+    .c-B {
+      box-shadow: 0px 4px 6px -3px #636363;
+      background-color: #fffed0;
+      background: linear-gradient(135deg, #f7f69b55 25%, transparent 25%) -10px 0/ 20px 20px, linear-gradient(225deg, #f7f69b 25%, transparent 25%) -10px 0/ 20px 20px, linear-gradient(315deg, #f7f69b55 25%, transparent 25%) 0px 0/ 20px 20px, linear-gradient(45deg, #f7f69b 25%, #fffed0 25%) 0px 0/ 20px 20px;
+    }
+
+    .d-B {
+      box-shadow: 0px 4px 6px -3px #636363;
+      background-color: #d4dffa;
+      background-image: linear-gradient(to right, #b9cdff, #b9cdff 5px, #d4dffa 5px, #d4dffa);
+      background-size: 10px 100%;
+    }
+
+    .e-B {
+      box-shadow: 0px 4px 6px -3px #636363;
+      background-color: #fce6e6;
+      background: repeating-linear-gradient(45deg, #FAD4D4, #FAD4D4 5px, #fce6e6 5px, #fce6e6 25px);
+    }
+
+    .a-C {
+      box-shadow: 0px 4px 6px -3px #636363;
+      background-color: #e7e8fd;
+      opacity: 1;
+      background: repeating-linear-gradient(45deg, #e2e4fb, #e2e4fb 5px, #e7e8fd 5px, #e7e8fd 25px);
+    }
+
+    .b-C {
+      box-shadow: 0px 4px 6px -3px #636363;
+      background-color: #fdd3d6;
+      opacity: 1;
+      background-image: repeating-linear-gradient(45deg, #ffb1b6 25%, transparent 25%, transparent 75%, #ffb1b6 75%, #ffb1b6), repeating-linear-gradient(45deg, #ffb1b6 25%, #fdd3d6 25%, #fdd3d6 75%, #ffb1b6 75%, #ffb1b6);
+      background-position: 0 0, 10px 10px;
+      background-size: 20px 20px;
+    }
+
+    .c-C {
+      box-shadow: 0px 4px 6px -3px #636363;
+      background-color: #edf4e5;
+      opacity: 1;
+      background-image: linear-gradient(to right, #e7f1dd, #e7f1dd 5px, #edf4e5 5px, #edf4e5);
+      background-size: 10px 100%;
+    }
+
+    .d-C {
+      box-shadow: 0px 4px 6px -3px #636363;
+      background-color: #dcfffa;
+      background-image: radial-gradient(circle at center center, #bbf6f5, #dcfffa), repeating-radial-gradient(circle at center center, #bbf6f5, #bbf6f5, 10px, transparent 20px, transparent 10px);
+      background-blend-mode: multiply;
+    }
+
+    .e-C {
+      box-shadow: 0px 4px 6px -3px #636363;
+      background-color: #edf1f9;
+      background: linear-gradient(135deg, #b4dafa55 25%, transparent 25%) -10px 0/ 20px 20px, linear-gradient(225deg, #b4dafa 25%, transparent 25%) -10px 0/ 20px 20px, linear-gradient(315deg, #b4dafa55 25%, transparent 25%) 0px 0/ 20px 20px, linear-gradient(45deg, #b4dafa 25%, #edf1f9 25%) 0px 0/ 20px 20px;
+    }
+
+    .item-slider {
+      margin: 0 auto;
+    }
+
+    .slick-slider img {
+      height: auto;
+      margin: 20px 50px 0 50px;
+      width: 230px;
+    }
+
+    .link {
+      display: block;
+      height: 50%;
+    }
+
+    /* dots */
+    .slide-dots {
+      text-align: right;
+      font-size: 0;
+      margin-right: 10%;
+    }
+
+    .slide-dots li {
+      display: inline-block;
+      margin: 0 5px;
+    }
+
+    .slide-dots li button {
+      position: relative;
+
+    }
+
+    .slide-dots li button::before {
+      content: "";
+      cursor: pointer;
+      height: 12px;
+      width: 12px;
+      background-color: #F2F0EB;
+      border-radius: 50%;
+      position: absolute;
+      margin-top: 40px;
+    }
+
+    .slide-dots li.slick-active button::before {
+      background-color: #221E1F;
+    }
+
+    button {
+      background: none;
+      border: none;
+      outline: none;
+      padding: 0 7px;
+    }
+
+    /* main */
+    .main ul li {
+      height: 280px;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .main-img {
+      position: absolute;
+      margin: 0 auto;
+      left: 50%;
+      transform: translateX(-50%);
+      top: 17%;
+      width: 200px;
+    }
+
+    .container {
+      position: absolute;
+      left: 5%;
+      transform: translateX(-5%);
+      bottom: 5%;
+    }
+
+    .flex {
+      display: flex;
+      align-items: center;
+    }
+
+    .soldout {
+      margin-left: 5px;
+      margin-bottom: 7px;
+      border: red 1px solid;
+      color: red;
+      font-size: 9px;
+      padding: 2px 4px 2px 4px;
+    }
+
+    .item-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .item-detail {
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .item-detail h2 {
+      font-size: 14px;
+      margin-right: 10px;
+      font-weight: 600;
+    }
+
+    .item-detail p {
+      font-size: 12px;
+    }
+
+
+    /* footer */
+    .footer {
+      background-color: #F2F0EB;
+      height: 215px;
+      display: flex;
+      align-items: center;
+    }
+
+    .footer-logo {
+      width: 80px;
+      margin: 0 auto;
+      padding-bottom: 110px;
+    }
+  </style>
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/earlyaccess/notosansjp.css">
+  <link rel="stylesheet" type="text/css" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+  <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/modaal@0.4.4/dist/css/modaal.min.css">
+  <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+</head>
+
+<body>
+
+  <!-- header -->
+  <div class="header">
+    <div class="header-menu">
+      <div class="logo">
+        <a href="shop.html"><img src="thumbs/logo.png" alt=""></a>
+      </div>
+      <div class="ar-button">
+        <a href="index.html"><img src="thumbs/ar_icon.png" alt=""></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- main -->
+  <div class="main">
+    <!-- main-tab -->
+    <div class="tab-panel">
+      <ul class="tab-group">
+        <li class="tab tab-A is-active">
+          <span class="circle is-active"></span>
+          <img src="thumbs/Colors/asset1.jpeg" alt="">
+          <p>COLOR</p>
+        </li>
+        <li class="tab tab-B">
+          <span class="circle"></span>
+          <img src="thumbs/Graphic/asset1.jpeg" alt="">
+          <p>GRAPHIC</p>
+        </li>
+        <li class="tab tab-C">
+          <span class="circle"></span>
+          <img src="thumbs/Designers/asset1.jpeg" alt="">
+          <p>DESIGNER</p>
+        </li>
+      </ul>
+      <!-- main-contents -->
+      <div class="panel-group">
+        <ul class="panel tab-A is-show">
+          <li class="a-A ">
+            <div class="item-slider">
+              <a class="link" href="select-c1.html"><img src="thumbs/shop/color/c1_left.png" alt=""></a>
+              <a class="link" href="select-c1.html"><img src="thumbs/shop/color/c1_right.png" alt=""></a>
+              <a class="link" href="select-c1.html"><img src="thumbs/shop/color/c1_center.png" alt=""></a>
+            </div>
+            <div class="container trigger">
+              <p class="item-title">Pink&Yellow</p>
+              <div class="item-detail">
+                <h2>¥ 450</h2>
+                <p>COLOR Series No.1</p>
+              </div>
+            </div>
+
+          </li>
+          <li class="b-A">
+            <div class="item-slider">
+              <a class="link" href="select-c2.html"><img src="thumbs/shop/color/c2_left.png" alt=""></a>
+              <a class="link" href="select-c2.html"><img src="thumbs/shop/color/c2_right.png" alt=""></a>
+              <a class="link" href="select-c2.html"><img src="thumbs/shop/color/c2_center.png" alt=""></a>
+            </div>
+            <div class="container trigger">
+              <p class="item-title">Black Leaf</p>
+              <div class="item-detail">
+                <h2>¥ 450</h2>
+                <p>COLOR Series No.2</p>
+              </div>
+            </div>
+
+          </li>
+          <li class="c-A">
+            <div class="item-slider">
+              <img src="thumbs/shop/color/c4_left.png" alt="">
+              <img src="thumbs/shop/color/c4_right.png" alt="">
+              <img src="thumbs/shop/color/c4_center.png" alt="">
+            </div>
+
+            <div class="container trigger">
+              <div class="flex">
+                <p class="item-title">Black right</p>
+                <p class="soldout">SOLD OUT</p>
+              </div>
+              <div class="item-detail">
+                <h2>¥ 450</h2>
+                <p>COLOR Series No.3</p>
+              </div>
+            </div>
+
+          </li>
+          <li class="d-A">
+            <div class="item-slider">
+              <img src="thumbs/shop/color/c3_left.png" alt="">
+              <img src="thumbs/shop/color/c3_right.png" alt="">
+              <img src="thumbs/shop/color/c3_center.png" alt="">
+            </div>
+            <div class="container trigger">
+              <div class="flex">
+                <p class="item-title">PURPLE SUN</p>
+                <p class="soldout">SOLD OUT</p>
+              </div>
+              <div class="item-detail">
+                <h2>¥ 500</h2>
+                <p>COLOR Series No.4</p>
+              </div>
+            </div>
+          </li>
+          <li class="e-A">
+            <div class="item-slider">
+              <img src="thumbs/shop/color/c5_left.png" alt="">
+              <img src="thumbs/shop/color/c5_right.png" alt="">
+              <img src="thumbs/shop/color/c5_center.png" alt="">
+            </div>
+            <div class="container trigger">
+              <div class="flex">
+                <p class="item-title">BLUE DREAM</p>
+                <p class="soldout">SOLD OUT</p>
+              </div>
+              <div class="item-detail">
+                <h2>¥ 500</h2>
+                <p>COLOR Series No.5</p>
+              </div>
+            </div>
+          </li>
+        </ul>
+
+        <ul class="panel tab-B">
+          <li class="a-B">
+            <div class="item-slider">
+              <a class="link" href="select-g1.html"><img src="thumbs/shop/graphic/g1_left.png" alt=""></a>
+              <a class="link" href="select-g1.html"><img src="thumbs/shop/graphic/g1_right.png" alt=""></a>
+              <a class="link" href="select-g1.html"><img src="thumbs/shop/graphic/g1_center.png" alt=""></a>
+            </div>
+            <div class="container trigger">
+              <p class="item-title">RIPPLES</p>
+              <div class="item-detail">
+                <h2>¥ 550</h2>
+                <p>GRAPHIC Series No.1</p>
+              </div>
+            </div>
+
+          </li>
+          <li class="b-B">
+            <div class="item-slider">
+              <a class="link" href="select-g2.html"><img src="thumbs/shop/graphic/g2_left.png" alt=""></a>
+              <a class="link" href="select-g2.html"><img src="thumbs/shop/graphic/g2_right.png" alt=""></a>
+              <a class="link" href="select-g2.html"><img src="thumbs/shop/graphic/g2_center.png" alt=""></a>
+            </div>
+            <div class="container trigger">
+              <p class="item-title">MONOQ BUBBLE</p>
+              <div class="item-detail">
+                <h2>¥ 550</h2>
+                <p>GRAPHIC Series No.2</p>
+              </div>
+            </div>
+          </li>
+          <li class="c-B">
+            <div class="item-slider">
+              <img src="thumbs/shop/graphic/g3_left.png" alt="">
+              <img src="thumbs/shop/graphic/g3_right.png" alt="">
+              <img src="thumbs/shop/graphic/g3_center.png" alt="">
+            </div>
+            <div class="container trigger">
+              <div class="flex">
+                <p class="item-title">Pastel Square</p>
+                <p class="soldout">SOLD OUT</p>
+              </div>
+              <div class="item-detail">
+                <h2>¥ 600</h2>
+                <p>GRAPHIC Series No.3</p>
+              </div>
+            </div>
+          </li>
+          <li class="d-B">
+            <div class="item-slider">
+              <img src="thumbs/shop/graphic/g4_left.png" alt="">
+              <img src="thumbs/shop/graphic/g4_right.png" alt="">
+              <img src="thumbs/shop/graphic/g4_center.png" alt="">
+            </div>
+            <div class="container trigger">
+              <div class="flex">
+                <p class="item-title">LEAF DEAL</p>
+                <p class="soldout">SOLD OUT</p>
+              </div>
+              <div class="item-detail">
+                <h2>¥ 550</h2>
+                <p>GRAPHIC Series No.4</p>
+              </div>
+            </div>
+          </li>
+          <li class="e-B">
+            <div class="item-slider">
+              <img src="thumbs/shop/graphic/g5_left.png" alt="">
+              <img src="thumbs/shop/graphic/g5_right.png" alt="">
+              <img src="thumbs/shop/graphic/g5_center.png" alt="">
+            </div>
+            <div class="container trigger">
+              <div class="flex">
+                <p class="item-title">Flowers</p>
+                <p class="soldout">SOLD OUT</p>
+              </div>
+              <div class="item-detail">
+                <h2>¥ 550</h2>
+                <p>GRAPHIC Series No.3</p>
+              </div>
+            </div>
+          </li>
+        </ul>
+
+        <ul class="panel tab-C">
+          <li class="a-C">
+            <div class="item-slider">
+              <a class="link" href="select-d1.html"><img src="thumbs/shop/designer/d1_left.png" alt=""></a>
+              <a class="link" href="select-d1.html"><img src="thumbs/shop/designer/d1_right.png" alt=""></a>
+              <a class="link" href="select-d1.html"><img src="thumbs/shop/designer/d1_center.png" alt=""></a>
+            </div>
+            <div class="container trigger">
+              <p class="item-title">Swirl Diamond</p>
+              <div class="item-detail">
+                <h2>¥ 450</h2>
+                <p>designer Pack No.1</p>
+              </div>
+            </div>
+          </li>
+          <li class="b-C">
+            <div class="item-slider">
+              <a class="link" href="select-d2.html"><img src="thumbs/shop/designer/d3_left.png" alt=""></a>
+              <a class="link" href="select-d2.html"><img src="thumbs/shop/designer/d3_right.png" alt=""></a>
+              <a class="link" href="select-d2.html"><img src="thumbs/shop/designer/d3_center.png" alt=""></a>
+            </div>
+            <div class="container trigger">
+              <p class="item-title">Fang Fang</p>
+              <div class="item-detail">
+                <h2>¥ 660</h2>
+                <p>designer Pack No.2</p>
+              </div>
+            </div>
+          </li>
+          <li class="c-C">
+            <div class="item-slider">
+              <img src="thumbs/shop/designer/d4_left.png" alt="">
+              <img src="thumbs/shop/designer/d4_right.png" alt="">
+              <img src="thumbs/shop/designer/d4_center.png" alt="">
+            </div>
+            <div class="container trigger">
+              <div class="flex">
+                <p class="item-title">Flower Bouquet</p>
+                <p class="soldout">SOLD OUT</p>
+              </div>
+              <div class="item-detail">
+                <h2>¥ 660</h2>
+                <p>designer Pack No.3</p>
+              </div>
+            </div>
+          </li>
+          <li class="d-C">
+            <div class="item-slider">
+              <img src="thumbs/shop/designer/d5_left.png" alt="">
+              <img src="thumbs/shop/designer/d5_right.png" alt="">
+              <img src="thumbs/shop/designer/d5_center.png" alt="">
+            </div>
+            <div class="container trigger">
+              <div class="flex">
+                <p class="item-title">Cider Bubble</p>
+                <p class="soldout">SOLD OUT</p>
+              </div>
+              <div class="item-detail">
+                <h2>¥ 660</h2>
+                <p>designer Pack No.4</p>
+              </div>
+            </div>
+          </li>
+          <li class="e-C">
+            <div class="item-slider">
+              <img src="thumbs/shop/designer/d6_left.png" alt="">
+              <img src="thumbs/shop/designer/d6_right.png" alt="">
+              <img src="thumbs/shop/designer/d6_center.png" alt="">
+            </div>
+            <div class="container trigger">
+              <div class="flex">
+                <p class="item-title">BiRiBiRi</p>
+                <p class="soldout">SOLD OUT</p>
+              </div>
+              <div class="item-detail">
+                <h2>¥ 660</h2>
+                <p>designer Pack No.5</p>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- footer -->
+    <footer class="footer">
+      <div class="footer-logo">
+        <img src="thumbs/logo.png" alt="">
+      </div>
+    </footer>
+
+    <script type="text/javascript" src="//code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/npm/modaal@0.4.4/dist/js/modaal.min.js"></script>
+    <script type="text/javascript" src="//unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script type="text/javascript" src="//kit.fontawesome.com/5a4920467e.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="lib/js/deepar.js"></script>
+
+    <script type="text/javascript">
+      // load-animation
+      function fadeAnime() {
+        $('.trigger').each(function () {
+          var elemPos = $(this).offset().top - 50;
+          var scroll = $(window).scrollTop();
+          var windowHeight = $(window).height();
+          if (scroll >= elemPos - windowHeight) {
+            $(this).addClass('smooth');
+          }
+        });
+      }
+
+      $(window).scroll(function () {
+        fadeAnime();
+      });
+      $(window).on('load', function () {
+        fadeAnime();
+      });
+
+      // slick
+      $(function () {
+        $('.item-slider').slick({
+          arrows: false,
+          dots: true,
+          dotsClass: "slide-dots",
+          autoplay: true,
+          autoplaySpeed: 3500,
+          speed: 500,
+          slidesToShow: 1,
+          centerMode: true,
+          variableWidth: true
+        });
+      });
+
+      //tab
+      $(function () {
+        $('.tab').click(function () {
+          $('.is-active').removeClass('is-active');
+          $(this).addClass('is-active');
+          $('.is-show').removeClass('is-show');
+          const index = $(this).index();
+          $('.panel').eq(index).addClass('is-show');
+        });
+      });
+
+      //PWA
+      if ('serviceWorker' in navigator) {
+        console.log('Found serviceWorker');
+        navigator.serviceWorker.register('service-worker.js')
+          .then((reg) => {
+            console.log('Service Worker Registered', reg);
+          });
+      } else {
+        console.log('Not Found serviceWorker');
+      }
+    </script>
+</body>
+
+</html>

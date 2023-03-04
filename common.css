@@ -1,0 +1,54 @@
+.weight100 {
+    font-weight: 100
+}
+
+.weight300 {
+    font-weight: 300
+}
+
+.weight400 {
+    font-weight: 400
+}
+
+.weight500 {
+    font-weight: 500
+}
+
+.weight600 {
+    font-weight: 600
+}
+
+.weight700 {
+    font-weight: 700
+}
+
+.weight900 {
+    font-weight: 900
+}
+
+@import url(http://fonts.googleapis.com/earlyaccess/notosansjapanese.css);
+
+body {
+    margin: 0px;
+    padding: 0px;
+    font-family: 'Noto Sans Japanese', sans-serif;
+    color: #221E1F;
+}
+
+img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+li {
+    list-style: none;
+}
+
+a {
+    color: #221E1F;
+    text-decoration: none;
+}
+
+*:focus {
+    outline: none;
+    }

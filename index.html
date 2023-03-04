@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8">
+  <title>AR+T MASK</title>
+  <meta name="description" content="デザインマスクのAR試着を楽しもう。">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <link rel="icon" href="favicon.ico">
+  <link rel="stylesheet" href="destyle.min.css">
+  <link rel="stylesheet" href="common.css">
+  <link rel="stylesheet" type="text/css" href="loading.css">
+  <link rel="manifest" href="manifest.json">
+  <style>
+    /* canvas-area */
+    canvas.deepar {
+      border: 0px none;
+      background-color: black;
+      display: block;
+      margin: auto;
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    }
+
+    /* start-modal__body */
+    .modaal-content-container {
+      padding: 0 !important;
+    }
+
+    .swiper {
+      width: 300px !important;
+      height: 470px !important;
+    }
+
+    /* start-modal__pagination */
+    .swiper-pagination-horizontal.swiper-pagination-bullets.swiper-pagination-bullet {
+      cursor: pointer;
+    }
+
+    .swiper-horizontal>.swiper-pagination-bullets,
+    .swiper-pagination-bullets.swiper-pagination-horizontal,
+    .swiper-pagination-custom,
+    .swiper-pagination-fraction {
+      bottom: 3.5% !important;
+    }
+
+    /* start-modal__btn */
+    .swipper-button-next {
+      position: absolute;
+      width: 80px;
+      bottom: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      cursor: pointer;
+      border-radius: 20px;
+      background-color: rgb(242, 87, 87);
+    }
+
+    .swipper-button-next:hover {
+      background-color: rgb(218, 60, 60);
+    }
+
+    .swipper-button-next p {
+      font-size: 14px;
+      font-weight: 600;
+      padding: 11.5px;
+      text-align: center;
+      color: #fff;
+    }
+
+    .modal-end {
+      width: 180px;
+    }
+
+    /* start-modal__img */
+    .info-img {
+      position: relative;
+      height: 270px;
+      background-color: rgba(242, 164, 68, 0.6);
+      box-shadow: 0px 4px 4px -3px #a9a9a9;
+    }
+
+    .info-img__logo {
+      margin: 0 auto;
+      padding: 30px 0 5px 0;
+      width: 70px;
+    }
+
+    .slide2 .info-img {
+      background-color: rgba(63, 191, 119, 0.6);
+    }
+
+    .slide2 .info-img__content {
+      position: absolute;
+      width: 220px;
+      bottom: 16%;
+      left: 50%;
+      transform: translateX(-50%);
+      margin: 0 auto;
+      filter: drop-shadow(5px 5px 1px rgba(97, 97, 97, 0.6));
+    }
+
+    .slide2 .info-img__content img {
+      border-radius: 7%;
+    }
+
+    .slide3 .info-img {
+      background-color: rgba(242, 87, 73, 0.6);
+    }
+
+    .slide3 .info-img__content {
+      position: absolute;
+      height: 170px;
+      width: 84%;
+      bottom: 0%;
+      left: 50%;
+      transform: translateX(-50%);
+      margin: 0 auto;
+      filter: drop-shadow(5px 0.5px 1px rgba(97, 97, 97, 0.6));
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* start-modal__text*/
+    .info-body {
+      padding: 20px;
+      text-align: center;
+    }
+
+    .info-body__title {
+      font-weight: 600;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .info-body__text {
+      font-size: 14px;
+      line-height: 21px;
+    }
+
+    /* header */
+    .header {
+      position: fixed !important;
+      top: 15px;
+      width: 100%;
+    }
+
+    .header-menu {
+      margin: 0 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cart-button {
+      width: 190px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .cart-button img {
+      height: 40px;
+    }
+
+    .logo {
+      height: 40px;
+    }
+
+    /* menu-area */
+    .menu {
+      position: fixed !important;
+      bottom: 0;
+      width: 100%;
+    }
+
+    /* open-btn-area */
+    #open-btn-box {
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      background-color: rgba(242, 240, 235, 0.4);
+    }
+
+    #open-btn-box.active {
+      background-color: rgba(242, 240, 235, 0);
+    }
+
+    .open-btn {
+      margin: 10px;
+      cursor: pointer;
+      width: 13px;
+      height: 13px;
+      border: 3px solid #221E1F;
+      border-top: 3px solid transparent;
+      border-right: 3px solid transparent;
+      transition: 0.6s ease;
+      transform: rotate(-45deg);
+    }
+
+    .open-btn.active {
+      transform: rotate(-585deg);
+      border: 3px solid #fff;
+      border-top: 3px solid transparent;
+      border-right: 3px solid transparent;
+    }
+
+    .contents-carousel.active {
+      height: 0;
+      opacity: 0.1;
+    }
+
+    .contents-carousel__box {
+      background-color: rgba(242, 240, 235, 0.4);
+      justify-content: center;
+    }
+
+    /* contents-carousel__items */
+    .content {
+      margin: 10px;
+      opacity: 0.85;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .content img {
+      border-radius: 10%;
+      width: 75%;
+      height: auto;
+      margin-bottom: 9px;
+    }
+
+    .content p {
+      margin: 0;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* contents-carousel__items-selected */
+    .content.active {
+      color: rgb(242, 87, 87);
+      opacity: 1;
+    }
+
+    /* effect-carousel */
+    .effect-carousel {
+      height: 80px;
+      background-color: rgba(242, 240, 235, 0.6);
+    }
+
+    .effect-content {
+      position: absolute;
+      bottom: 0;
+    }
+
+    .swiper-container {
+      overflow: hidden;
+    }
+
+    /* effect-carousel__items */
+    .thumb {
+      margin-top: 15px;
+      margin-bottom: 15px;
+      margin-right: auto;
+      margin-left: auto;
+      position: relative;
+      opacity: 0.7;
+      border-radius: 50px;
+      transition: all 0.2s ease;
+      height: 50px;
+      cursor: pointer;
+    }
+
+    /* effect-carousel__items-selected */
+    .slick-center .thumb {
+      -moz-transform: scale(1.25);
+      -ms-transform: scale(1.25);
+      -o-transform: scale(1.25);
+      -webkit-transform: scale(1.25);
+      opacity: 1;
+      transform: scale(1.25);
+      border-radius: 50%;
+      border: 2px solid rgb(242, 87, 87);
+    }
+
+    /* slick-wide */
+    .slick-slide {
+      width: 100px;
+    }
+
+    /* start-modal-area */
+    #info {
+      display: none;
+    }
+
+    .modaal-container {
+      width: 45px;
+    }
+
+    /* screenshot-btn */
+    .modal-open {
+      position: absolute !important;
+      top: -50%;
+      right: 5%;
+      height: 80px;
+      width: 80px;
+    }
+
+    .text {
+      position: absolute !important;
+      top: 55%;
+      left: 50%;
+      transform: translate(-50%, -55%);
+      height: 55%;
+      width: 55%;
+      z-index: 3;
+    }
+
+    .rotate {
+      position: absolute !important;
+      animation: 15s linear infinite rotation;
+    }
+
+    @keyframes rotation {
+      0% {
+        transform: rotate(0);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* screenshot-modal */
+    .modal {
+      display: none;
+      overflow-x: hidden !important;
+      overflow-y: hidden !important;
+      width: auto;
+    }
+
+    .modaal-inner-wrapper {
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    #captureCanvas {
+      display: none;
+    }
+
+    .modal-body {
+      margin: 10px;
+    }
+
+    /* screenshot-modal__btn */
+    .modal-btn {
+      margin: 10px;
+      position: relative !important;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .modal-btn_style1,
+    .modal-btn_style2 {
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.8rem;
+      padding: 8px 12px 8px 12px;
+    }
+
+    .modal-btn_style1 {
+      background-color: #666;
+    }
+
+    .modal-btn_style1:hover {
+      background-color: #3c3c3c;
+    }
+
+    .modal-btn_style2 {
+      background-color: rgb(242, 87, 87);
+    }
+
+    .modal-btn_style2:hover {
+      background-color: rgb(229, 71, 71);
+    }
+
+  </style>
+  <link rel="stylesheet" type="text/css" href="//unpkg.com/swiper/swiper-bundle.min.css">
+  <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/modaal@0.4.4/dist/css/modaal.min.css">
+  <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+  <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/earlyaccess/notosansjp.css">
+</head>
+
+<body>
+  <!--splash-->
+  <div id="splash">
+    <div id="splash_logo">
+      <img src="thumbs/logo.png" alt="" class="fadeUp">
+    </div>
+    <div id="loading-content"></div>
+  </div>
+  </div>
+
+  <!--canvas-->
+  <canvas class="deepar" id="deepar-canvas" oncontextmenu="event.preventDefault()"></canvas>
+
+  <!-- start-modal -->
+  <div id="info">
+    <div class="swiper">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide slide1">
+          <div class="info-img">
+            <div class="info-img__logo">
+              <img src="thumbs/logo.png" alt="logo">
+            </div>
+            <div class="info-img__content" src="thumbs/info2.png" alt="info1">
+              <img src="thumbs/mask-sample.gif" alt="info1">
+            </div>
+          </div>
+          <div class="info-body">
+            <p class="info-body__title">AR+T MASKへようこそ</p>
+            <p class="info-body__text">ここでは、デザインマスクの<br>AR試着を楽しむことができます。</p>
+          </div>
+          <div class="swipper-button-next">
+            <p>次へ</p>
+          </div>
+        </div>
+
+        <div class="swiper-slide slide2">
+          <div class="info-img">
+            <div class="info-img__logo">
+              <img src="thumbs/logo.png" alt="logo">
+            </div>
+            <div class="info-img__content" alt="info2">
+              <img src="thumbs/info2.png" alt="info2">
+            </div>
+          </div>
+          <div class="info-body">
+            <p class="info-body__title">AR試着を楽しむために</p>
+            <p class="info-body__text">ポップアップが表示されたら<br>「許可」をタップしてください。</p>
+          </div>
+          <div class="swipper-button-next">
+            <p>次へ</p>
+          </div>
+        </div>
+
+        <div class="swiper-slide slide3">
+          <div class="info-img">
+            <div class="info-img__logo">
+              <img src="thumbs/logo.png" alt="logo">
+            </div>
+            <div class="info-img__content" alt="info3">
+              <img src="thumbs/info3.png" alt="info3">
+              <img src="thumbs/info3_2.png" alt="info3_2">
+            </div>
+          </div>
+          <div class="info-body">
+            <p class="info-body__title">マスクは実際に購入できます</p>
+            <p class="info-body__text">右上のショップアイコンから<br>商品一覧ページに進みましょう。</p>
+          </div>
+          <div class="swipper-button-next modal-end">
+            <p>試着体験を始める！</p>
+          </div>
+        </div>
+      </div>
+      <div class="swiper-pagination"></div>
+    </div>
+  </div>
+
+  <!-- MENU -->
+  <div class="menu">
+    <!--MENU_header -->
+    <div class="header">
+      <div class="header-menu">
+        <div class="logo">
+          <img src="thumbs/logo.png" alt="">
+        </div>
+        <div class="cart-button">
+          <a href="#info" class="info-icon"><img src="thumbs/info_icon.png" alt=""></a>
+          <a href="shop.html"><img src="thumbs/shop_icon.png" alt=""></a>
+        </div>
+      </div>
+    </div>
+    <!--MENU_open-btn -->
+    <div id="open-btn-box">
+      <div class="open-btn"></div>
+    </div>
+    <!--MENU_contents-menu -->
+    <div class="contents-carousel swiper-container tab-menu">
+      <div class="contents-carousel__box swiper-wrapper">
+        <div class="content active swiper-slide">
+          <img src="thumbs/Colors/asset1.jpeg" />
+          <p>COLOR</p>
+        </div>
+        <div class="content swiper-slide">
+          <img src="thumbs/Graphic/asset1.jpeg" />
+          <p>GRAPHIC</p>
+        </div>
+        <div class="content swiper-slide">
+          <img src="thumbs/Designers/asset1.jpeg" />
+          <p>DESIGNER</p>
+        </div>
+      </div>
+    </div>
+    <!--MENU_effects-menu -->
+    <div class="effect-carousel swiper-container tab-content">
+      <div class="effect-carousel__box swiper-wrapper">
+        <div class="effect-content effect1 swiper-slide">
+          <div><img class="thumb" src="thumbs/Colors/asset1.jpeg" /></div>
+          <div><img class="thumb" src="thumbs/Colors/asset2.jpeg" /></div>
+          <div><img class="thumb" src="thumbs/Colors/asset3.jpeg" /></div>
+          <div><img class="thumb" src="thumbs/Colors/asset4.jpeg" /></div>
+          <div><img class="thumb" src="thumbs/Colors/asset5.jpeg" /></div>
+        </div>
+
+        <div class="effect-content effect2 swiper-slide">
+          <div><img class="thumb" src="thumbs/Graphic/asset1.jpeg" /></div>
+          <div><img class="thumb" src="thumbs/Graphic/asset2.jpeg" /></div>
+          <div><img class="thumb" src="thumbs/Graphic/asset3.jpeg" /></div>
+          <div><img class="thumb" src="thumbs/Graphic/asset4.jpeg" /></div>
+          <div><img class="thumb" src="thumbs/Graphic/asset5.jpeg" /></div>
+        </div>
+
+        <div class="effect-content effect3 swiper-slide">
+          <div><img class="thumb" src="thumbs/Designers/asset1.jpeg" /></div>
+          <div><img class="thumb" src="thumbs/Designers/asset3.jpeg" /></div>
+          <div><img class="thumb" src="thumbs/Designers/asset4.jpeg" /></div>
+          <div><img class="thumb" src="thumbs/Designers/asset5.jpeg" /></div>
+          <div><img class="thumb" src="thumbs/Designers/asset6.jpeg" /></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- screen-shot_btn -->
+    <div class="camera-btn">
+      <a href="#modal" id="download" class="modal-open">
+        <img class="text" src="thumbs/photo_text.png" alt="">
+        <img class="rotate" src="thumbs/photo_bg.png" alt="">
+      </a>
+    </div>
+
+    <!-- screen-shot_Modal -->
+    <div id="modal" class="modal">
+      <div class="modal-body">
+        <canvas id="captureCanvas"></canvas>
+        <img src="" id="preview">
+        <div class="modal-btn">
+          <p class="modal-btn_style1 pushdown">キャンセル</p>
+          <a id="captureLink" class="modal-btn_style2 pushdown" href="">ダウンロード</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+  <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/modaal@0.4.4/dist/js/modaal.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+  <script type="text/javascript" src="//kit.fontawesome.com/5a4920467e.js" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="lib/js/deepar.js"></script>
+  <script type="text/javascript" src="lib/js/loading.js"></script>
+
+  <script type="text/javascript">
+    // Variable definition
+    var canvasHeight = window.innerHeight;
+    var canvasWidth = window.innerWidth;
+
+    // desktop, the width of the canvas is 0.66 * window height and on mobile it's fullscreen
+    if (window.innerWidth > window.innerHeight) {
+      canvasWidth = Math.floor(window.innerHeight * 0.66);
+    }
+    let canvas = document.getElementById("deepar-canvas");
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+
+    // DeepAR setting
+    var deepAR = new DeepAR({
+      licenseKey:
+        "37e4ab16f75e8159f55b08781b9250a119aad225bc129afd69f5fb75867380c3010dcfff97abd824",
+      canvas: canvas,
+      segmentationConfig: {
+        modelPath: "lib/models/segmentation/segmentation-160x160-opt.bin",
+      },
+      deeparWasmPath: "lib/wasm/deepar.wasm",
+      callbacks: {
+        onInitialize: function () {
+          // start video immediately after the initalization, mirror = true
+          deepAR.startVideo(true);
+
+          // or we can setup the video element externally and call deepAR.setVideoElement (see startExternalVideo function below)
+          deepAR.switchEffect(
+            0,
+            "slot",
+            "./effects/c_ar1.deepar",
+            function () {
+              // effect loaded
+            }
+          );
+        },
+      },
+    });
+
+    //callbacks option
+    deepAR.callbacks.onCameraPermissionAsked = function () {
+      console.log("camera permission asked");
+    };
+    deepAR.callbacks.onCameraPermissionGranted = function () {
+      console.log("camera permission granted");
+    };
+    deepAR.callbacks.onCameraPermissionDenied = function () {
+      console.log("camera permission denied");
+    };
+
+    // screenshot
+    function saveCapture(photo) {
+      let x = document.getElementById("captureCanvas");
+      let preview = document.getElementById("preview");
+      let ctx = x.getContext("2d");
+      var img = new Image();
+
+      img.onload = function () {
+        ctx.clearRect(0, 0, img.width, img.height);
+
+        ctx.canvas.width = img.width;
+        ctx.canvas.height = img.height;
+
+        ctx.drawImage(img, 0, 0, img.width, img.height);
+
+        $(".modal-body").append(x);
+
+        let link = document.querySelector("#captureLink");
+        link.href = x.toDataURL("image/png", 1.0);
+        link.download = (new Date).toISOString().replace(/[^\d]/g, "").slice(0, 14) + ".png";
+
+        preview.src = x.toDataURL("image/png", 1.0);
+
+        // screenshot(Modal)
+        $(".modal-open").modaal({
+          hide_close: true,
+          width: img.width - 100,
+          height: img.height - 140
+        });
+      };
+      img.src = photo;
+    }
+
+    deepAR.callbacks.onScreenshotTaken = function (photo) {
+      console.log("screenshot taken");
+      saveCapture(photo);
+    };
+
+    document
+      .getElementById("download")
+      .addEventListener("click", () => deepAR.takeScreenshot());
+
+    //callbacks option
+    deepAR.callbacks.onImageVisibilityChanged = function (visible) {
+      console.log("image visible", visible);
+    };
+    deepAR.callbacks.onFaceVisibilityChanged = function (visible) {
+      console.log("face visible", visible);
+    };
+    deepAR.downloadFaceTrackingModel("lib/models/face/models-68-extreme.bin");
+    $(".modal-btn_style1").on('click', function () {
+      $('.modal-open').modaal('close');
+    })
+
+    // Store video objects for cleanup
+    var videoObjects = {};
+    function startExternalVideo() {
+      cleanupVideoObjects();
+      // create video element
+      var video = document.createElement("video");
+      video.muted = true;
+      video.loop = true;
+      video.controls = true;
+      video.setAttribute("playsinline", "playsinline");
+      video.style.width = "100%";
+      video.style.height = "100%";
+
+      // put it somewhere in the DOM
+      var videoContainer = document.createElement("div");
+      videoContainer.appendChild(video);
+      videoContainer.style.width = "1px";
+      videoContainer.style.height = "1px";
+      videoContainer.style.position = "absolute";
+      videoContainer.style.top = "0px";
+      videoContainer.style.left = "0px";
+      videoContainer.style["z-index"] = "-1";
+      document.body.appendChild(videoContainer);
+
+      videoObjects.videoContainer = videoContainer;
+      videoObjects.video = video;
+      navigator.mediaDevices
+        .getUserMedia({ video: true })
+        .then(function (stream) {
+          try {
+            video.srcObject = stream;
+          } catch (error) {
+            video.src = URL.createObjectURL(stream);
+          }
+          setTimeout(function () {
+            video.play();
+          }, 50);
+        })
+        .catch(function (error) {
+          console.log("error in video play:", error);
+        });
+
+      // tell the DeepAR SDK about our new video element
+      deepAR.setVideoElement(video, true);
+    }
+    function cleanupVideoObjects() {
+      if (videoObjects.length > 0) {
+        videoObjects.videoContainer.parentNode.removeChild(
+          videoObjects.videoContainer
+        );
+        videoObjects.videoContainer = null;
+        if (videoObjects.video.srcObject) {
+          //getUserMedia starts a stream, all tracks on all streams need to be stoppedbefore calling getUserMedia again
+          videoObjects.video.srcObject
+            .getTracks()
+            .forEach((track) => track.stop());
+        }
+        videoObjects.video.pause();
+        videoObjects = {};
+      }
+    }
+
+    // width-setting
+    if (window.innerWidth > window.innerHeight) {
+      var width = Math.floor(window.innerHeight * 0.66);
+
+      var menu = document.getElementsByClassName("menu")[0];
+      menu.style.width = width + "px";
+      menu.style.marginLeft = (window.innerWidth - width) / 2 + "px";
+
+      var header = document.getElementsByClassName("header")[0];
+      header.style.width = width + "px";
+      header.style.margin = "auto";
+
+      var btn = document.getElementsByClassName("camera-btn")[0];
+      btn.style.width = width + "px";
+      btn.style.margin = "auto";
+    }
+
+    // jQuery-
+    // open-btn-accordion
+    $("#open-btn-box").click(function () {
+      $("#open-btn-box").toggleClass("active");
+      $("#open-btn-box .open-btn").toggleClass("active");
+      $(".contents-carousel").toggleClass("active");
+    });
+
+    // contents-carousel-tab
+    var tab = new Swiper('.tab-content', {
+      slidesPerView: 1,
+      thumbs: {
+        swiper: {
+          el: '.tab-menu',
+          slidesPerView: 4,
+        }
+      }
+    });
+
+    // content-carousel-color
+    $('.content').on('click', function () {
+      $('.content').removeClass('active');
+      $(this).toggleClass('active');
+      deepAR.switchEffect(0, "slot", effects[currentSlide]);
+    });
+
+    // effects-carousel-slide
+    $(document).ready(function () {
+      $(".effect1").slick({
+        slidesToShow: 1,
+        centerMode: true,
+        focusOnSelect: true,
+        arrows: false,
+        accessibility: false,
+        variableWidth: true,
+      });
+      var effects = [
+        "./effects/c_ar1.deepar",
+        "./effects/c_ar2.deepar",
+        "./effects/c_ar3.deepar",
+        "./effects/c_ar4.deepar",
+        "./effects/c_ar5.deepar"
+      ];
+      $(".effect1").on(
+        "afterChange",
+        function (event, slick, currentSlide) {
+          deepAR.switchEffect(0, "slot", effects[currentSlide]);
+        }
+      );
+    });
+    $(document).ready(function () {
+      $(".effect2").slick({
+        slidesToShow: 1,
+        centerMode: true,
+        focusOnSelect: true,
+        arrows: false,
+        accessibility: false,
+        variableWidth: true,
+      });
+      var effects = [
+        "./effects/g_ar1.deepar",
+        "./effects/g_ar2.deepar",
+        "./effects/g_ar3.deepar",
+        "./effects/g_ar4.deepar",
+        "./effects/g_ar5.deepar",
+      ];
+      $(".effect2").on(
+        "afterChange",
+        function (event, slick, currentSlide) {
+          deepAR.switchEffect(0, "slot", effects[currentSlide]);
+        }
+      );
+    });
+    $(document).ready(function () {
+      $(".effect3").slick({
+        slidesToShow: 1,
+        centerMode: true,
+        focusOnSelect: true,
+        arrows: false,
+        accessibility: false,
+        variableWidth: true,
+      });
+      var effects = [
+        "./effects/d_ar1.deepar",
+        "./effects/d_ar3.deepar",
+        "./effects/d_ar4.deepar",
+        "./effects/d_ar5.deepar",
+        "./effects/d_ar6.deepar",
+      ];
+      $(".effect3").on(
+        "afterChange",
+        function (event, slick, currentSlide) {
+          deepAR.switchEffect(0, "slot", effects[currentSlide]);
+        }
+      );
+    });
+
+    //tutorial-modal(cookie)
+    var access = $.cookie('access')
+    if (!access) {
+      flag = true;
+      $.cookie('access', false);
+    } else {
+      flag = false
+    }
+
+    //tutorial-modal
+    $(function () {
+      setTimeout(function () {
+        $(".info-icon").modaal({
+          start_open: flag, 
+          overlay_close: true,
+          hide_close: true,
+          width: 300,
+          height: 470
+        });
+      }, 2000);
+    });
+    $(".modal-end").on('click', function () {
+      $('.info-icon').modaal('close');
+    })
+
+    // tutorial-modal__swiper
+    const swiper = new Swiper(".swiper", {
+      navigation: {
+        nextEl: ".swipper-button-next"
+      },
+      pagination: {
+        el: ".swiper-pagination",
+        clickable: "clickable"
+      },
+    });
+
+    //PWA
+    if ('serviceWorker' in navigator) {
+      console.log('Found serviceWorker');
+      navigator.serviceWorker.register('service-worker.js')
+        .then((reg) => {
+          console.log('Service Worker Registered', reg);
+        });
+    } else {
+      console.log('Not Found serviceWorker');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+    "name": "AR+T MASK",
+    "short_name": "AR+T MASK",
+    "theme_color": "#F25749",
+    "background_color": "#F2F0EB",
+    "icons": [
+        {
+            "src": "icon.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "display": "standalone",
+    "start_url": "https://matazoroku.sakura.ne.jp/ar+tmask/index.html"
+}
